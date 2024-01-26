@@ -1,36 +1,31 @@
 import { useState } from "react";
 
-const EmployeeForm = ({ onSave, disabled, employee, onCancel }) => {
-  const [name, setName] = useState(employee?.name ?? "");
-  const [level, setLevel] = useState(employee?.level ?? "");
-  const [position, setPosition] = useState(employee?.position ?? "");
-
+const EmployeeForm = ({ onSave, disabled, employee, onCancel, equipments,favBrands }) => {
   const onSubmit = (e) => {
     e.preventDefault();
+    const formData = new FormData(e.target);
+    const entries = [...formData.entries()];
 
-    if (employee) {
-      return onSave({
-        ...employee,
-        name,
-        level,
-        position,
-      });
-    }
+    const employee = entries.reduce((acc, entry) => {
+      const [k, v] = entry;
+      acc[k] = v;
+      return acc;
+    }, {});
 
-    return onSave({
-      name,
-      level,
-      position,
-    });
+
+    return onSave(employee);
   };
 
   return (
     <form className="EmployeeForm" onSubmit={onSubmit}>
+      {employee && (
+        <input type="hidden" name="_id" defaultValue={employee._id} />
+      )}
+
       <div className="control">
         <label htmlFor="name">Name:</label>
         <input
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          defaultValue={employee ? employee.name : null}
           name="name"
           id="name"
         />
@@ -39,8 +34,7 @@ const EmployeeForm = ({ onSave, disabled, employee, onCancel }) => {
       <div className="control">
         <label htmlFor="level">Level:</label>
         <input
-          value={level}
-          onChange={(e) => setLevel(e.target.value)}
+          defaultValue={employee ? employee.level : null}
           name="level"
           id="level"
         />
@@ -49,13 +43,19 @@ const EmployeeForm = ({ onSave, disabled, employee, onCancel }) => {
       <div className="control">
         <label htmlFor="position">Position:</label>
         <input
-          value={position}
-          onChange={(e) => setPosition(e.target.value)}
+          defaultValue={employee ? employee.position : null}
           name="position"
           id="position"
         />
       </div>
-
+      <div className="control">
+        <label htmlFor="equipment">Equipment:</label>
+        {equipments}
+         </div>
+         <div className="control">
+        <label htmlFor="equipment">Favorite Brand:</label>
+        {favBrands}
+         </div>
       <div className="buttons">
         <button type="submit" disabled={disabled}>
           {employee ? "Update Employee" : "Create Employee"}

@@ -7,6 +7,7 @@ const names = require("./names.json");
 const levels = require("./levels.json");
 const positions = require("./positions.json");
 const EmployeeModel = require("../db/employee.model");
+const BrandModel = require('../db/brand.model');
 
 const mongoUrl = process.env.MONGO_URL;
 
@@ -19,15 +20,21 @@ const pick = (from) => from[Math.floor(Math.random() * (from.length - 0))];
 
 const populateEmployees = async () => {
   await EmployeeModel.deleteMany({});
+  await BrandModel.deleteMany({});
+
+  const brandNames = ["Acer", "Razer", "HP"];
+  const brands = brandNames.map((name) => ({ name }));
+  const createdBrands = await BrandModel.create(...brands);
 
   const employees = names.map((name) => ({
     name,
     level: pick(levels),
     position: pick(positions),
+    favoriteBrand: pick(createdBrands)._id,
   }));
 
-  await EmployeeModel.create(...employees);
-  console.log("Employees created");
+  await EmployeeModel.create(employees);
+  console.log("Employees and brands created");
 };
 
 const main = async () => {

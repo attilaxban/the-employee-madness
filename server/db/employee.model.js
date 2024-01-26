@@ -1,5 +1,7 @@
 // https://mongoosejs.com/
 const mongoose = require("mongoose");
+const brands = require("../populate/brands.json")
+const equipmentModel = require("./equipment.model");
 
 const { Schema } = mongoose;
 
@@ -11,6 +13,15 @@ const EmployeeSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  present: {
+    type: Boolean,
+    default: false,
+  },
+  equipment: {type: mongoose.Schema.Types.ObjectId, ref:'EquipmentModel'},
+  favoriteBrand: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Brand',
+  }
 });
 
 module.exports = mongoose.model("Employee", EmployeeSchema);
