@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import EmployeeForm from "../Components/EmployeeForm";
+import EmployeeForm from "../../Components/EmployeeForm";
 
 const createEmployee = (employee) => {
   return fetch("/api/employees", {
@@ -13,6 +13,10 @@ const createEmployee = (employee) => {
 };
 
 const EmployeeCreator = () => {
+  const [date,setDate] = useState('')
+  const [currSalary,setCurrSalary] = useState('')
+  const [desSalary, setDesSalary] = useState('')
+  const [color,setColor] = useState('')
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const[equipment,setEquipment] = useState(null);
@@ -29,6 +33,10 @@ const EmployeeCreator = () => {
     if(selectedBrands){
       employee.favoriteBrand = selectedBrands;
     }
+    employee.dateOfStart = date;
+    employee.favoriteColor = color;
+    employee.currentSalary = currSalary;
+    employee.desiredSalary = desSalary;
     setLoading(true);
 
     createEmployee(employee)
@@ -69,6 +77,19 @@ const EmployeeCreator = () => {
       <select  onChange={(e) => setSelectedBrand(e.target.value)}>
         {brands && brands.map(brand =>(<option key={brand._id} value={brand._id}>{brand.name}</option>))}
       </select>
+    }
+    startDate={
+      <input type="date" value={date} onChange={(e) => setDate(e.target.value) } />
+    }
+
+    currSalary={
+      <input type="text" value={currSalary} onChange={(e) => setCurrSalary(e.target.value)} />
+    }
+    desSalary={
+      <input type="text" value={desSalary} onChange={(e) => setDesSalary(e.target.value)} />
+    }
+    favColor={
+      <input type="color" value={color} onChange={(e) => setColor(e.target.value)} />
     }
     />
   );

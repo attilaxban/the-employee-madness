@@ -1,7 +1,7 @@
 import React from "react"
 import { useState } from "react"
 import { useEffect } from "react"
-import EmployeeTable from "../Components/EmployeeTable";
+import EmployeeTable from "../../Components/EmployeeTable";
 
 
 export default function Superheroes (){

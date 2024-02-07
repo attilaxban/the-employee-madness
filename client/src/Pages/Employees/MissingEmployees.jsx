@@ -1,7 +1,7 @@
 import React from "react";
 import { useState,useEffect } from "react";
 import { Link } from "react-router-dom";
-import EmployeeTable from "../Components/EmployeeTable";
+import EmployeeTable from "../../Components/EmployeeTable";
 
 export default function MissingEmployees (){
     

@@ -2,6 +2,7 @@
 const mongoose = require("mongoose");
 const brands = require("../populate/brands.json")
 const equipmentModel = require("./equipment.model");
+const boardGamesModel = require("./boardGame.model");
 
 const { Schema } = mongoose;
 
@@ -21,7 +22,33 @@ const EmployeeSchema = new Schema({
   favoriteBrand: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Brand',
-  }
+  },
+  favoriteBoardGame: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'BoardGames'
+  },
+  favoriteColor: String,
+  currentSalary: Number,
+  desiredSalary: Number,
+  dateOfStart: Date,
+  kittens: [
+    {
+      kittenName: String,
+      weight: Number
+    }
+  ],
+  address: {
+    country: String,
+    city: String,
+    street: String,
+    zipCode: Number
+  },
+  division: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Division",
+  },
+  country: String,
+  continent: String
 });
 
 module.exports = mongoose.model("Employee", EmployeeSchema);

@@ -1,18 +1,29 @@
 import { useEffect, useState } from "react";
-import Loading from "../Components/Loading";
-import EmployeeTable from "../Components/EmployeeTable";
+import Loading from "../../Components/Loading";
+import EmployeeTable from "../../Components/EmployeeTable";
 
 
-//hibakezelés
+//hibakezelés --DONE
 
 const fetchEmployees = () => {
-  return fetch("/api/employees").then((res) => res.json());
+  try{
+    return fetch("/api/employees").then((res) => res.json());
+  }catch(error){
+    console.log('Error fetching employees')
+    console.error();
+  }
 };
 
 const deleteEmployee = (id) => {
-  return fetch(`/api/employees/${id}`, { method: "DELETE" }).then((res) =>
-    res.json()
-  );
+  try{
+    return fetch(`/api/employees/${id}`, { method: "DELETE" }).then((res) =>
+      res.json())
+
+  }catch(error){
+    console.log('Error deleting employee');
+    console.error();
+  }
+
 };
 
 const EmployeeList = () => {
@@ -24,11 +35,14 @@ const EmployeeList = () => {
   const [searchName,setSearchName] = useState('')
   const [sortBy, setSortBy] = useState("");
 
+  const [confirmed,setConfirmed] = useState(false)
+
   const handleDelete = (id) => {
     deleteEmployee(id);
 
     setEmployees((employees) => {
       return employees.filter((employee) => employee._id !== id);
+
     });
   };
 

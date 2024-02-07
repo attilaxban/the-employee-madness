@@ -1,0 +1,31 @@
+[
+    {
+        "country" : "Hungary",
+        "continent" : "Europe"
+    },
+    {
+        "country" : "Zimbabwe",
+        "continent" : "Africa"
+    },
+    {
+        "country" : "Germany",
+        "continent" : "Europe"
+    },
+    {
+        "country" : "USA",
+        "continent" : "North USA"
+    },
+    {
+        "country" : "North Korea",
+        "continent" : "Asia"
+    },
+    {
+        "country" : "China",
+        "continent" : "Asia"
+    },
+    {
+        "country" : "Romania",
+        "continent" : "Europe"
+    }
+    
+]

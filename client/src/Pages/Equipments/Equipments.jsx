@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import EquipmentTable from "../Components/EquipmentTable";
+import EquipmentTable from "../../Components/EquipmentTable/EquipmentTable";
 import { Link } from "react-router-dom";
 
 
@@ -11,10 +11,10 @@ export default function Equipments ({onSelectEquipments} ){
     const [amount,setAmount] = useState('')
 
 
-    const handleSubmit = (e) =>{
+    const handleSubmit = async (e) =>{
         e.preventDefault();
         const data = {equipmentName,type,amount};
-        fetch('/api/equipments',{
+        await fetch('/api/equipments',{
             method: 'POST',
             headers: {"Content-Type" : "application/json"},
             body: JSON.stringify(data)
