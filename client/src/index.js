@@ -32,6 +32,15 @@ import DivisionCreator from "./Pages/Divisions/DivisionCreator";
 import DivisionUpdater from "./Pages/Divisions/DivisionUpdater";
 import EmployeesAssign from "./Pages/Divisions/EmployeesAssign";
 import DivisionId from "./Pages/Divisions/DivisionId";
+import Notes from "./Pages/Notes/Notes";
+import UserList from "./Pages/Users/UserList";
+import UserUpdater from "./Pages/Users/UserUpdater";
+import UserCreator from "./Pages/Users/UserCreator";
+import UserDelete from "./Pages/Users/UserDelete";
+import FindUser from "./Pages/Users/FindUser";
+import SearchEmployee from "./Pages/SearchEmployee/SearchEmployee";
+import SessionCreator from "./Pages/TrainingSession/SessionCreator"
+import SessionUpdater from "./Pages/TrainingSession/SessionUpdater";
 
 
 const router = createBrowserRouter([
@@ -131,7 +140,44 @@ const router = createBrowserRouter([
       {
         path: "/division/:id",
         element: <DivisionId />
-      }
+      },
+      {
+        path: "/employee/:employeeId/notes",
+        element: <Notes />
+      },
+     
+      {
+        path: "/users",
+        element: <UserList />
+      },
+      {
+        path: "/users/:id",
+        element: <UserUpdater />
+      },
+      {
+        path: "/users/create",
+        element: <UserCreator />
+      },
+      {
+        path: "/users/delete/:id",
+        element: <UserDelete />
+      },
+      {
+        path: "/users/find",
+        element: <FindUser />
+      },
+      {
+        path: "/search/employee",
+        element: <SearchEmployee />
+      },
+      {
+        path: "/session/create",
+        element: <SessionCreator />
+      },
+      {
+        path: "/session/update",
+        element: <SessionUpdater />
+      },
 
     ],
   },

@@ -48,7 +48,16 @@ const EmployeeSchema = new Schema({
     ref: "Division",
   },
   country: String,
-  continent: String
+  continent: String,
+  notes: [String],
+  favoriteTool: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Tools",
+  },
+  session:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Training'
+  }
 });
 
 module.exports = mongoose.model("Employee", EmployeeSchema);

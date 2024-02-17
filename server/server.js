@@ -9,6 +9,8 @@ const brandModel = require("./db/brand.model");
 const toolModel = require("./db/tools.model");
 const boardGameModel = require("./db/boardGame.model");
 const divisionModel = require("./db/divisions.model");
+const userModel = require("./db/user.model");
+const trainingModel = require("./db/training.model");
 
 
 const { MONGO_URL, PORT = 8080 } = process.env;
@@ -25,7 +27,10 @@ app.use(express.json());
 
 app.get("/api/employees/", async (req, res) => {
   try{
-  const employees = await EmployeeModel.find().sort({ created: "desc" });
+  const employees = await EmployeeModel.find().sort({ created: "desc" })
+  //nem működik ---- Megkérdezni
+  .populate('session', 'name')
+  .exec();
   if(employees){
     return res.json(employees);
   }else{
@@ -270,7 +275,6 @@ app.post("/api/equipments", (req, res) => {
 })
 
 app.get('/top-paid', async (req,res) =>{
-  console.log("Top paid");
    const salaries = await EmployeeModel.aggregate([
     {$group: {"_id": "$currentSalary"}},
     {$sort: {"_id": -1}},
@@ -556,9 +560,363 @@ app.delete("/api/v1/divisions/:id", async (req, res) => {
   }
 });
 
+// app.post('/api/employees/:employeeId',(req,res) =>{
+//   const employeeId = req.params.employeeId;
+//   console.log("afsad");
+//   const notes = req.body.notes
 
+//      EmployeeModel.findById(employeeId)
+//       .then(employee => {
+//         // console.log(employee);
+//         employee.notes = [...employee.notes,notes]
+//          employee.save()
+//           .then(response => res.json(response))
+//           .catch(err => res.status(400).json('Bad request'))
+//       })
+//       .catch(err => {
+//         res.status(500).json('Internal server error');
+//         console.log(err);
+//       })
+// })
+ /*---------------------------Practice PA2 Mongoose--------------------------------------------------------*/
 
+//  const users = [
+//   {
+//       name: "John Doe",
+//       age: 25,
+//       email: "john@example.com",
+//       regDate: new Date("2022-01-15")
+//   },
+//   {
+//       name: "Alice Smith",
+//       age: 35,
+//       email: "alice@gmail.com",
+//       regDate: new Date("2020-02-10")
+//   },
+//   {
+//       name: "Bob Johnson",
+//       age: 30,
+//       email: "bob@yahoo.com",
+//       regDate: new Date("2022-03-05")
+//   },
+//   {
+//       name: "Emily Brown",
+//       age: 40,
+//       email: "emily@example.com",
+//       regDate: new Date("2023-04-20")
+//   }
+// ];
 
+// users.map(user => {
+//   userModel.create({
+//     name: user.name,
+//     age: user.age,
+//     email: user.email,
+//     regDate: user.regDate
+//   })
+  
+// })
+
+app.get('/api/users',(req,res) =>{
+  userModel.find()
+    .then(users =>res.json(users))
+    .catch(err => {
+      res.status(500).json('Internal Server Error')
+    })
+})
+
+app.get('/api/users/find',(req,res) => {
+  const q = req.query;
+
+  userModel.find()
+    .then(users =>{
+      const filteredUser = users.filter(user => user.name.includes(q.name));
+      if(filteredUser){
+        res.json(filteredUser)
+      }
+    })
+    .catch(error => res.status(500).json('Internal server error'))
+})
+
+app.get('/api/users/older',(req,res) =>{
+  const q = req.query;
+  userModel.find()
+    .then(users => {
+     const olderUser= users.filter(user => user.age >= q.age );
+
+     if(olderUser){
+      res.json(olderUser)
+     }else{
+      res.status(400).json('Bad request')
+     }
+    })
+    .catch(err => {
+      res.status(500).json('Internal server error')
+    })
+})
+
+app.get('/api/older',(req,res) =>{
+  userModel.find()
+    .then(users => {
+      const allUser = users.map(user => user);
+
+      const filteredUsers = allUser.filter(user => user.age >= 30)
+
+      if(filteredUsers){
+        res.json(filteredUsers)
+      }
+    })
+    .catch(err => {
+      res.status(500).json('Internal server error')
+    })
+})
+
+app.get('/api/email',(req,res) =>{
+  userModel.find()
+    .then(user => {
+
+      const allUser = user.map(users => users);
+      const filteredUsers = user.filter(users => users.email.includes('@gmail.com'))
+
+      if(filteredUsers){
+        res.json(filteredUsers)
+      }
+    })
+    .catch(error => res.status(500).json('Internal server error', error))
+})
+
+app.get('/api/users/:id',(req,res) => {
+  const id = req.params.id
+
+  userModel.findById(id)
+    .then(user => res.json(user))
+    .catch(err => res.status(500).json('Internal Server Error'))
+})
+
+app.patch('/api/users/:id', (req,res) =>{
+  const id = req.params.id;
+
+  const name = req.body.name
+
+   userModel.findByIdAndUpdate(id,{...req.body})
+    .then(response => res.json(response))
+    .catch(err => res.status(500).json('Internal Server Error',err))
+})
+
+app.delete('/api/users',(req,res) =>{
+  userModel.deleteMany({age: {$gte: 40}})
+    .then(res.json({succes:true}))
+    .catch(err => res.json({succes:false}))
+})
+
+app.post('/api/users',(req,res) => {
+
+  userModel.create({
+    name: req.body.name,
+    age: req.body.age,
+    email: req.body.email,
+    regDate: req.body.regDate
+  })
+    .then(user => {
+      res.json(user)
+    })
+    .catch(err => res.json({succes: false}))
+
+})
+
+app.delete('/api/user/:id',(req,res) =>{
+  const id = req.params.id;
+
+  userModel.findByIdAndDelete(id)
+    .then(response => res.json({succes:true}))
+    .catch(err => res.json({succes:false}))
+})
+
+/*----------------------------Practice PA2/2---------------------------------------------------*/ 
+
+app.post('/api/users/create',(req,res) =>{
+    const newUser = new userModel({
+      name: req.body.name,
+      age:req.body.age,
+      email:req.body.email,
+      regDate: Date.now()
+    })
+    newUser.save()
+      .then(response => res.json({response}))
+      .catch(err => res.status(500).json('Internal server error'))
+})
+
+app.get('/api/users/read/get',(req,res) =>{
+  userModel.find()
+    .then(users => res.json(users))
+    .catch(err => res.status(500).json('Internal server error'))
+})
+
+app.get('/api/users/read/get/:id',(req,res) =>{
+  const id = req.params.id;
+
+    userModel.findById(id)
+      .then(user => res.json(user))
+      .catch(err => res.status(500).json('Internal server error'))
+})
+
+app.patch('/api/users/update/patch/:id',(req,res)=>{
+  const id = req.params.id
+  userModel.findByIdAndUpdate(id,{...req.body})
+    .then(user => res.json(user))
+    .catch(err => res.status(500).json('Internal server error'))
+})
+
+app.delete('/api/users/delete/delete/:id',(req,res)=>{
+  const id = req.params.id;
+    userModel.findByIdAndDelete(id)
+      .then(response => res.json({succes:true}))
+      .catch(err => res.status(500).json('Internal server error'))
+})
+
+app.get('/api/age/read/get',(req,res) =>{
+
+  const q = req.query;
+
+    userModel.find()
+      .then(users => {
+        const filteredUsers = users.filter(user => user.age <= q.age);
+
+        if(filteredUsers){
+          res.json(filteredUsers)
+        }else{
+          res.status(400).json('Bad request')
+        }
+      })
+      .catch(err => res.status(500).json('Internal server error'))
+})
+
+app.get('/api/users/email/:email',(req,res)=>{
+  const email = req.params.email;
+    userModel.find()
+      .then(users => {
+        const filteredUser = users.filter(user => user.email === email);
+
+        if(filteredUser){
+          res.json(filteredUser)
+        }else{
+          res.status(400).json('Bad request')
+        }
+      })
+      .catch(err => res.status(500).json('Internal server error'))
+})
+
+app.get('/api/users/number/count',(req,res)=>{
+  let count = 0;
+   userModel.countDocuments()
+      .then(count => {
+        res.json({count:count })
+      })
+      .catch(err => res.status(500).json('Internal server error'))
+})
+
+app.patch('/api/users/name/up/:id',(req,res)=>{
+  const id = req.params.id
+    userModel.findByIdAndUpdate(id,{
+      name: req.body.name
+    })
+    .then(response => res.json(response))
+    .catch(err => res.status(500).json('Internal server error'))
+})
+
+app.get('/api/users/date/:year',(req,res)=>{
+  const year = req.params.year
+    userModel.find()
+      .then(response => {
+        const filteredUsers = response.filter(user => user.regDate.getFullYear() === parseInt(year));
+
+        if(filteredUsers){
+          res.json(filteredUsers)
+        }else{
+          res.status(400).json('Bad request')
+        }
+      })
+      .catch(err => res.status(500).json('Internal server error'))
+})
+
+app.get('/api/users/search/:search',(req,res)=>{
+  const search = req.params.search;
+
+    userModel.find()
+      .then(users => {
+        const filteredUser = users.filter(user => (user.name.includes(search) || user.age === parseInt(search) || user.email === search))
+
+        filteredUser ? res.json(filteredUser) : res.status(400).json({error: 'Bad request'})
+      } )
+      .catch(err => res.status(500).json({error: 'Internal server error'}))
+})
+
+// userModel.create({
+//   name: "Nagy József",
+//   age: 24,
+//   email: "example.ex@example.com",
+//   regDate: new Date(Date.now())
+// })
+
+app.delete('/api/delete-users/:year',(req,res) =>{
+  const year = parseInt(req.params.year)
+
+    userModel.find()
+      .then(users => {
+        const filteredUsers = users.filter(user => user.regDate.getFullYear() === year)
+
+        if(filteredUsers){
+          const names = filteredUsers.map(user => {
+            userModel.deleteOne({name:user.name})
+              .then(response => res.status(204).json({succes:true, response: response}))
+              .catch(err => res.status(404).json('Not found'))
+          })
+        }else{
+          res.status(400).json('Bad request')
+        }
+      
+      })
+      .catch(err => res.status(500).json('Internal server error'))
+})
+//---------------------------------Training session-----------------------------------------------------------
+
+app.get('/api/v1/training-session',(req,res) =>{
+    trainingModel.find()
+      .then(training => res.json(training))
+      .catch(error => res.status(500).json({status : 'Internal  server error', error: error}))
+})
+
+app.get('/api/v1/training-session/:id',(req,res) =>{
+  trainingModel.findById(req.params.id)
+    .then(training => res.json(training))
+    .catch(error => res.status(500).json({status : 'Internal  server error', error: error}))
+})
+
+app.post('/api/v1/training-session', async (req,res) => {
+
+  const name = req.body.name;
+  const difficulty = req.body.difficulty
+    
+  const newTraining = new trainingModel({
+    name,
+    difficulty
+  })
+  await newTraining.save()
+    .then(response => res.json(response))
+    .catch(error => res.status(500).json({status : 'Internal  server error', error: error}))
+})
+
+app.patch('/api/v1/training-session/:id',(req,res) =>{
+  trainingModel.findByIdAndUpdate(req.params.id,{...req.body})
+    .then(response => res.json(response))
+    .catch(error => res.status(500).json({status : 'Internal  server error', error: error}))
+})
+
+app.delete('/api/v1/training-session/:id',(req,res) => {
+  trainingModel.findByIdAndRemove(req.params.id)
+    .then(response => res.json({succes:true}))
+    .catch(error => res.status(500).json({status : 'Internal  server error', error: error}))
+})
 
 
 

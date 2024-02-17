@@ -174,6 +174,7 @@ const EmployeeTable = ({ employees, onDelete }) => {
                 <button onClick={() => setFalse(employee._id)}>Missing</button>
              
                 <Link to={`/kittens/${employee._id}`}> <button>Kittens</button></Link>
+                <Link to = {`/employee/${employee._id}/notes`}><button>Notes</button></Link>
 
               </td>
 

@@ -21,8 +21,18 @@ const EmployeeCreator = () => {
   const [loading, setLoading] = useState(false);
   const[equipment,setEquipment] = useState(null);
   const [brands,setBrands] = useState(null);
+  const [sessions,setSessions] = useState(null)
+  const [games,setGames] = useState(null);
+  const [tools,setTools] = useState(null)
+  const [country,setCountry] = useState('');
+  const [city,setCity] = useState('');
+  const [street,setStreet] = useState('');
+  const [zipcode,setZipcode] = useState('');
   const [selectedEquipment,setSelectedEquipment] = useState(null)
   const [selectedBrands,setSelectedBrand] = useState(null)
+  const [selectedSession,setSelectedSession] = useState(null)
+  const[selectedGame,setSelectedGame] = useState(null)
+  const [selectedTool,setSelectedTool] = useState(null)
 
   const handleCreateEmployee = (employee) => {
 
@@ -33,10 +43,25 @@ const EmployeeCreator = () => {
     if(selectedBrands){
       employee.favoriteBrand = selectedBrands;
     }
+    if(selectedSession){
+      employee.session = selectedSession;
+    }
+    if(selectedGame){
+      employee.favoriteBoardGame = selectedGame;
+    }
+    if(selectedTool){
+      employee.favoriteTool = selectedTool;
+    }
     employee.dateOfStart = date;
     employee.favoriteColor = color;
     employee.currentSalary = currSalary;
     employee.desiredSalary = desSalary;
+    employee.address = {
+      country:country,
+      city: city,
+      street:street,
+      zipCode: parseInt(zipcode)
+    }
     setLoading(true);
 
     createEmployee(employee)
@@ -59,6 +84,30 @@ const EmployeeCreator = () => {
       .then(resp => resp.json())
       .then(resp => {
         setBrands(resp);
+      })
+  },[])
+
+  useEffect(()=>{
+    fetch('/api/v1/training-session')
+      .then(resp => resp.json())
+      .then(resp => {
+        setSessions(resp);
+      })
+  },[])
+
+  useEffect(()=>{
+    fetch('/api/v1/tools')
+      .then(resp => resp.json())
+      .then(resp => {
+        setTools(resp);
+      })
+  },[])
+
+  useEffect(()=>{
+    fetch('/api/v1/games')
+      .then(resp => resp.json())
+      .then(resp => {
+        setGames(resp);
       })
   },[])
 
@@ -88,9 +137,40 @@ const EmployeeCreator = () => {
     desSalary={
       <input type="text" value={desSalary} onChange={(e) => setDesSalary(e.target.value)} />
     }
+
     favColor={
       <input type="color" value={color} onChange={(e) => setColor(e.target.value)} />
     }
+    boardGame={
+      <select value={selectedGame} onChange={(e) => setSelectedGame(e.target.value)}>
+        {games && games.map(game =>(<option key={game._id} value={game._id}>{game.name}</option>))}
+      </select>
+    }
+    favTool={
+      <select value={selectedTool} onChange={(e) => setSelectedTool(e.target.value)}>
+        {tools && tools.map(tool => (
+          <option key={tool._id} value={tool._id}>{tool.name}</option>
+        ))}
+      </select>
+    }
+    session={
+      <select value={selectedSession} onChange={(e) => setSelectedSession(e.target.value)}>
+        {sessions && sessions.map(session =>(<option key={session._id} value={session._id}>{session.name}</option>))}
+      </select>
+  }
+  address={
+    <div>
+        <label htmlFor="">Country</label>
+        <input type="text" value={country} onChange={(e) => setCountry(e.target.value)} /> 
+        <label htmlFor="" >City</label>
+        <input type="text" value={city} onChange={(e) => setCity(e.target.value)} /> 
+        <label htmlFor="" >Street</label>
+        <input type="text" value={street} onChange={(e) => setStreet(e.target.value)}  /> 
+        <label htmlFor="" >Zip-Code</label>
+        <input type="text" value={zipcode} onChange={(e) => setZipcode(e.target.value)} /> 
+      </div>
+
+  }
     />
   );
 };

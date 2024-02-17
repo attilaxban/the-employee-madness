@@ -72,11 +72,12 @@ export default function Kittens (){
             <form onSubmit={handleSubmit}>
                 <label>
                     Name:
+                </label>
                     <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
-                </label>
                 <label>
-                    <input type="text" placeholder="Weight" value={weight} onChange={(e) => setWeight(e.target.value)} />
+                        Weight
                 </label>
+                    <input type="text" placeholder="Weight" value={weight} onChange={(e) => setWeight(e.target.value)} />
                 <button type="submit">Add Kitten</button>
             </form>
         </div>

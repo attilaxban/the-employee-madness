@@ -27,6 +27,9 @@ const Layout = () => (
           <Link to="/divisions/">
             <button type="button">Divisions</button>
           </Link>
+          <Link to="/session/create">
+            <button type="button">Add Training Session</button>
+          </Link>
         </li>
       </ul>
     </nav>

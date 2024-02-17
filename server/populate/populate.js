@@ -42,7 +42,6 @@ const populateEmployees = async () => {
 
   const brandNames = ["Acer", "Razer", "HP"];
   const equipments = [{ equipmentName: "Pen", type: "writing", amount: 10 }, { equipmentName: "Monitor", type: "IT", amount: 10 }];
-  const slary = [1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000]
   const brands = brandNames.map((name) => ({ name }));
   const createdBrands = await BrandModel.create(brands);
   const tools = [
@@ -97,7 +96,8 @@ const populateEmployees = async () => {
     address: testAddress,
     division: pick(createdDivisions)._id,
     country: pickedCountry.country,
-    continent: pickedCountry.continent
+    continent: pickedCountry.continent,
+    notes: ["Default text"]
     
 
   }});
