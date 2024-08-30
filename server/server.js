@@ -13,7 +13,7 @@ const userModel = require("./db/user.model");
 const trainingModel = require("./db/training.model");
 
 
-const { MONGO_URL, PORT = 8080 } = process.env;
+const { MONGO_URL, PORT = 8000 } = process.env;
 
 if (!MONGO_URL) {
   console.error("Missing MONGO_URL environment variable");
@@ -23,12 +23,11 @@ if (!MONGO_URL) {
 const app = express();
 app.use(express.json());
 
-//hibakezelés olyan hibakód ami utal a hibára --- DONE
+
 
 app.get("/api/employees/", async (req, res) => {
   try{
   const employees = await EmployeeModel.find().sort({ created: "desc" })
-  //nem működik ---- Megkérdezni
   .populate('session', 'name')
   .exec();
   if(employees){
@@ -284,32 +283,6 @@ app.get('/top-paid', async (req,res) =>{
       .catch(err => res.status(500).json('Internal server error'))
 })
 
-
-// mongoose beépített distinct sort limit használata
-
-// app.get('/top-paid', (req,res) =>{
-//   try{
-//     const salaries = []
-//     EmployeeModel.find()
-//       .then(employees => {
-//         const salary = employees
-//         .map(employee => {
-//           if(!salaries.includes(employee.currentSalary)){
-//             salaries.push(employee.currentSalary)
-//           }
-//         })
-
-//         salaries.sort((a,b) => b-a)
-//                     //.slice()
-//         const topThree = [salaries[0], salaries[1],salaries[2]]
-//         res.send(topThree)
-//       })
-//       .catch(error => res.status(400).json('Network response error'))
-//   }catch(error){
-//     res.status(500).json('Internal server error')
-//   }
-// })
-
 app.get('/api/v1/tools', (req,res) =>{
   try {
     toolModel.find()
@@ -560,63 +533,6 @@ app.delete("/api/v1/divisions/:id", async (req, res) => {
   }
 });
 
-// app.post('/api/employees/:employeeId',(req,res) =>{
-//   const employeeId = req.params.employeeId;
-//   console.log("afsad");
-//   const notes = req.body.notes
-
-//      EmployeeModel.findById(employeeId)
-//       .then(employee => {
-//         // console.log(employee);
-//         employee.notes = [...employee.notes,notes]
-//          employee.save()
-//           .then(response => res.json(response))
-//           .catch(err => res.status(400).json('Bad request'))
-//       })
-//       .catch(err => {
-//         res.status(500).json('Internal server error');
-//         console.log(err);
-//       })
-// })
- /*---------------------------Practice PA2 Mongoose--------------------------------------------------------*/
-
-//  const users = [
-//   {
-//       name: "John Doe",
-//       age: 25,
-//       email: "john@example.com",
-//       regDate: new Date("2022-01-15")
-//   },
-//   {
-//       name: "Alice Smith",
-//       age: 35,
-//       email: "alice@gmail.com",
-//       regDate: new Date("2020-02-10")
-//   },
-//   {
-//       name: "Bob Johnson",
-//       age: 30,
-//       email: "bob@yahoo.com",
-//       regDate: new Date("2022-03-05")
-//   },
-//   {
-//       name: "Emily Brown",
-//       age: 40,
-//       email: "emily@example.com",
-//       regDate: new Date("2023-04-20")
-//   }
-// ];
-
-// users.map(user => {
-//   userModel.create({
-//     name: user.name,
-//     age: user.age,
-//     email: user.email,
-//     regDate: user.regDate
-//   })
-  
-// })
-
 app.get('/api/users',(req,res) =>{
   userModel.find()
     .then(users =>res.json(users))
@@ -731,8 +647,6 @@ app.delete('/api/user/:id',(req,res) =>{
     .then(response => res.json({succes:true}))
     .catch(err => res.json({succes:false}))
 })
-
-/*----------------------------Practice PA2/2---------------------------------------------------*/ 
 
 app.post('/api/users/create',(req,res) =>{
     const newUser = new userModel({
@@ -851,13 +765,6 @@ app.get('/api/users/search/:search',(req,res)=>{
       .catch(err => res.status(500).json({error: 'Internal server error'}))
 })
 
-// userModel.create({
-//   name: "Nagy József",
-//   age: 24,
-//   email: "example.ex@example.com",
-//   regDate: new Date(Date.now())
-// })
-
 app.delete('/api/delete-users/:year',(req,res) =>{
   const year = parseInt(req.params.year)
 
@@ -878,7 +785,6 @@ app.delete('/api/delete-users/:year',(req,res) =>{
       })
       .catch(err => res.status(500).json('Internal server error'))
 })
-//---------------------------------Training session-----------------------------------------------------------
 
 app.get('/api/v1/training-session',(req,res) =>{
     trainingModel.find()
@@ -924,7 +830,7 @@ const main = async () => {
   await mongoose.connect(MONGO_URL);
 
   app.listen(PORT, () => {
-    console.log("App is listening on 8080");
+    console.log(`App listening on: http://localhost:${PORT}`);
     console.log("Try /api/employees route right now");
   });
 };

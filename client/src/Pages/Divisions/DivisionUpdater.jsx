@@ -8,7 +8,6 @@ export default function DivisionUpdater({ id,setEdit }) {
     const [name, setName] = useState('')
     const [budget, setBudget] = useState('')
     const [boss, setBoss] = useState('')
-    const [location, setLocation] = useState('')
     const [employee, setEmployee] = useState([])
     const [city,setCity] = useState('');
     const [country,setCountry] = useState('');

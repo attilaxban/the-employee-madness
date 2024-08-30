@@ -17,11 +17,6 @@ const EmployeeForm = ({ onSave, disabled, employee, onCancel, equipments, favBra
     return onSave(employee);
   };
 
-  // const handleDateChange = (event) => {
-  //   setDate
-
-  // }
-
   return (
     <form className="EmployeeForm" onSubmit={onSubmit}>
       {employee && (

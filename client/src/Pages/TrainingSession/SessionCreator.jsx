@@ -10,7 +10,6 @@ export default function TrainingCreator (){
     const [name,setName] = useState('')
     const [difficulty,setDifficulty] = useState('')
     const [sessions,setSessions] = useState([])
-    const [counter,setCounter] = useState(0)
     const [searchTerm,setSearchTerm] = useState('')
     const [submitted,setSubmitted] = useState(0);
     const[arrange,setArrange] = useState("asc")
@@ -45,10 +44,6 @@ export default function TrainingCreator (){
 
         if(response.ok){
             setSubmitted(submitted+1)
-            console.log("Session created");
-            console.log(sessions);
-            // setSessions([...sessions,data]) //a submitted state miatt nincs rá szükség
-
         }else{
             throw new Error ('Internal server error')
         }
@@ -77,19 +72,14 @@ export default function TrainingCreator (){
     }
 
     const handleSimilar = async (session) =>{
-        // setCounter(counter+1)
         const filteredSimilars = sessions.filter(trainingSession => trainingSession.difficulty === session )
         setSessions(filteredSimilars)
         console.log(filteredSimilars);
     }
 
- 
-
-    // useEffect(() =>{
-    //     setSessions(arrangeSessions(arrange,sessions,sortBy));
-    // }, [arrange,sortBy]);
-
-   
+    const showAllSession = async () => {
+        fetchSessions()
+    }   
 
     useEffect(()=>{
         fetchSessions()
@@ -119,6 +109,7 @@ export default function TrainingCreator (){
             <label>Difficulty</label>
             <input type="text" value={difficulty} onChange={(e) => setDifficulty(e.target.value)} />
             <button type="submit">Submit</button>
+            <button onClick={showAllSession}>Show All</button>
         </form>
 
 

@@ -10,7 +10,6 @@ export default function SearchEmployee() {
     const [allEmployee, setAllEmployee] = useState([]);
     const [level, setLevel] = useState('');
     const [position, setPosition] = useState('');
-    const [filteredEmployees, setFilteredEmployees] = useState([])
 
 
     const [clicked, setClicked] = useState(false)
@@ -63,7 +62,6 @@ export default function SearchEmployee() {
     console.log(level);
     console.log(position);
 
-    //
     return (
 
         <div>

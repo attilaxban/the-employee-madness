@@ -77,7 +77,6 @@ export default function UserList(){
                             </td>
                             <td>
                                 <button onClick={(e) => handleDelete(user._id)}>Delete</button>
-                            {/* <Link to = {`/users/delete/${user._id}`}><button>Delete</button></Link> */}
                             </td>
                         </tr>
                     ))}

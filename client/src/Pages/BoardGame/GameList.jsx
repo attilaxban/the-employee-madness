@@ -9,8 +9,6 @@ export default function GameList(){
     const {id} = useParams();
 
     const [games,setGames] = useState([]);
-    const [selectedGame,setSelectedGame] = useState([]);
-    const [selected,setSelected] = useState(false)
     const navigate = useNavigate();
 
     useEffect(() =>{

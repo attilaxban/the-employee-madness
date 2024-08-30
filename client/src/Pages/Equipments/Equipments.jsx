@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import EquipmentTable from "../../Components/EquipmentTable/EquipmentTable";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 
 export default function Equipments ({onSelectEquipments} ){
@@ -9,6 +9,11 @@ export default function Equipments ({onSelectEquipments} ){
     const [equipmentName,setEquipmentName] = useState('')
     const [type,setType] = useState('')
     const [amount,setAmount] = useState('')
+    const navigate = useNavigate();
+
+    const navigateToHome = async () => {
+      navigate('/')
+    }
 
 
     const handleSubmit = async (e) =>{
@@ -19,11 +24,12 @@ export default function Equipments ({onSelectEquipments} ){
             headers: {"Content-Type" : "application/json"},
             body: JSON.stringify(data)
         })
-            .then(response => response.json())
-            .then(response =>{
-                console.log(response);
+            .then(response => {
+              if(response.ok){
+                response.json()
+                navigate('/')
+              }
             })
-
             .catch(error => console.error(error))
     }
 
